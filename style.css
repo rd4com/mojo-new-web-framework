@@ -1,0 +1,16 @@
+
+body {
+    margin: 4px;
+}
+
+button {
+    background-color: yellow;
+    color: blue
+}
+
+.bg-green {
+    background-color: lightgreen;
+}
+.bg-blue {
+    background-color: lightblue;
+}

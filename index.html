@@ -1,0 +1,74 @@
+<!DOCTYPE html>
+<html>
+    <head>
+        <link rel="stylesheet" href="/style.css">
+        <script>
+            const socket = new WebSocket(location)//WebSocket('ws://127.0.0.1:8080')
+            
+            function send_event(e, data){
+                var tmp = data
+                if ("value" in e.target){
+                    tmp["value"] = e.target.value
+                }
+                var tmp_element = e.target
+                while (!tmp_element.getAttribute("data-instance_name")) {
+                    tmp_element=tmp_element.parentElement
+                }
+                tmp["instance_name"] = tmp_element.getAttribute("data-instance_name")
+                socket.send((JSON.stringify(tmp)))
+            }
+
+        socket.onopen = (event) => {
+          console.log('connected')
+        }
+        socket.onmessage = (e) => {
+            dom_tree = JSON.parse(e.data)["dom_tree"]
+            var res = render_dom(dom_tree)
+            res.id = "app"
+            document.getElementById("app").replaceWith(res)
+        }
+        socket.onerror = (error) => console.error(error)
+        socket.onclose = (event) => console.log('disconnected')
+        
+        function render_dom(dom_tree){
+            if (dom_tree["element_type"] == "text"){
+                console.log("create text node")
+                var tmp_ = dom_tree["element_nested"][0]
+                return document.createTextNode(tmp_)
+            } else {
+                console.log("create node")
+                console.log(dom_tree["element_type"])
+                var tmp = document.createElement(
+                        dom_tree["element_type"]
+                    )
+                for (var e in dom_tree) {
+                    if (e != "element_nested" && e!= "element_type"){
+                        console.log("set attribute", e)
+                        if (dom_tree[e].constructor == Object){
+                            console.log("attribute is event")
+                            console.log(e)
+                            console.log("data", dom_tree[e])
+                            var tmp_data = JSON.parse(JSON.stringify(dom_tree[e]))
+                            tmp.addEventListener(e, function (ev_) {
+                                console.log("send event")
+                                send_event(ev_, tmp_data)
+                            });
+                        } else {
+                            console.log("attribute is", e)
+                            console.log("attribute value", dom_tree[e])
+                            tmp.setAttribute(e, dom_tree[e])
+                        }
+                    } else{}
+                }
+                for (var e in dom_tree["element_nested"]){
+                    tmp.append(render_dom(dom_tree["element_nested"][e]))
+                }
+                return tmp
+            }
+        }
+        </script>
+    </head>
+    <body>
+        <div id="app"></div>
+    </body>
+</html>
