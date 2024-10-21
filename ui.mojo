@@ -10,14 +10,15 @@ struct Session:
     var local_instances: UnsafePointer[Dict[String, Instance]]
     var InstanceName: String
     var _appdata: UnsafePointer[PythonObject]
+    var _sessiondata: UnsafePointer[PythonObject]
     
     fn appdata(inout self)->ref[self]PythonObject:
         """An app-wide dictionary usable by all websocket sessions."""
         return self._appdata[]
     
-    #fn sessiondata(inout self)->ref[self]PythonObject:
-    #    """A client-wide dictionary for all components in the current session."""
-    #    return self._sessiondata[]
+    fn sessiondata(inout self)->ref[self]PythonObject:
+       """A client-wide dictionary for all components in the current session."""
+       return self._sessiondata[]
     
     def Render[C: Component](
         inout self, 
@@ -83,6 +84,7 @@ def serve_app[
     client_states = Dict[
         String, Dict[String,Instance]
     ]() 
+    session_data = Dict[String,PythonObject]()
     todel = PythonObject([])
     
     index_html = OpenOrRaise("index.html")
@@ -97,13 +99,15 @@ def serve_app[
         if new_websocket:
             print("new websocket", new_websocket.value())
             client_states[new_websocket.value()] = Dict[String, Instance]()
-
+            session_data[new_websocket.value()] = Python.dict()
+            
             app = Session(
                 UnsafePointer.address_of(
                     client_states._find_ref(new_websocket.value())
                 ),
                 "main_component",
-                UnsafePointer.address_of(appdata)
+                UnsafePointer.address_of(appdata),
+                UnsafePointer.address_of(session_data[new_websocket.value()])
             )
             resp = IntoJson(app.Render[T]("main_component"))
 
@@ -134,7 +138,8 @@ def serve_app[
                 app = Session(
                     UnsafePointer.address_of(client_states._find_ref(w[])),
                     str(as_json["instance_name"]),
-                    UnsafePointer.address_of(appdata)
+                    UnsafePointer.address_of(appdata),
+                    UnsafePointer.address_of(session_data[w[]])
                 )
                 res_from_event = app._event(as_json)
                 if res_from_event.value == Action.Error:
@@ -174,6 +179,8 @@ def serve_app[
                 if str(w) in http_server.websockets:
                     http_server.websockets.pop(str(w))
                     # TODO: check if closed
+                if str(w) in session_data:
+                    _ = session_data.pop(str(w))
                 if str(w) in client_states:
                     tmp_client_state = client_states.pop(str(w))
                     for s in tmp_client_state:

@@ -14,7 +14,7 @@ feel free to fork, also to contribute fixes to bugs or suggestions.**
 &nbsp;
 
     ✨ mojoproject.toml:
-    🔮 nightly 2️⃣0️⃣2️⃣4️⃣🟪1️⃣0️⃣🟪1️⃣8️⃣1️⃣7️⃣
+    🔮 nightly 2️⃣0️⃣2️⃣4️⃣🟪1️⃣0️⃣🟪2️⃣1️⃣0️⃣5️⃣
 
 &nbsp;
 
@@ -40,8 +40,9 @@ The json is rendered into HtmlElement in the browser!
 &nbsp;
 
 ### 🐣 Examples: 
-- [app.mojo](./app.mojo) is a small websocket chat
+- [app.mojo](./app.mojo) is a small websocket chat (`appdata()`)
 - [app2.mojo](./app2.mojo) is a simple login system with a page router
+- [app3.mojo](./app3.mojo) is an example for `sessiondata()`
 
 &nbsp;
 
@@ -79,7 +80,6 @@ Appdata:
 Sessiondata:
     It is a `PythonObject` dictionnary only available to one session.
     That way, any Component of one session can have things in common.
-    Still in the todo list, quick to implement.
 
 
 ## Server
@@ -98,7 +98,7 @@ alias port=8080
 ```
 
 ## Next Todos 
-1. `sessiondata` (`self.session[]`)
+<!-- 1. `sessiondata` (`self.session[]`) -->
 - `Variant` for `ui.mojo` 
 
 
@@ -127,6 +127,8 @@ alias port=8080
 - ✅ render dom from a json tree
 - ✅ an app-wide dictionary usable by all websocket sessions.
     (`self.session.appdata()`)
+- ✅ A client-wide dictionary for all components in the current session
+    (`self.session.sessiondata()`)
 - ✅ hybrid events mixing js dom value with `**kwargs` !
     ```mojo
     return Input(

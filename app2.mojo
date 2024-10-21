@@ -10,7 +10,7 @@ def main():
     serve_app[MainComponent](appdata, exit_if_client_not_in)
 
 @value
-struct MainComponent(Component):
+struct MainComponent: #(Component):
     var input_login: String
     var connected: Optional[String]
     var session: Session
@@ -57,7 +57,7 @@ struct MainComponent(Component):
         )
 
 @value
-struct Router(Component):
+struct Router: #(Component):
     var current_page: String
     var session: Session
     def __init__(inout self, session: Session):

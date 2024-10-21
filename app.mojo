@@ -7,7 +7,7 @@ def main():
     serve_app[MainComponent](appdata, exit_if_client_not_in)
 
 @value
-struct MainComponent(Component):
+struct MainComponent: #(Component):
     var current_message: String
     var session: Session
     def __init__(inout self, session: Session):
@@ -54,7 +54,7 @@ struct MainComponent(Component):
         )
 
 @value
-struct Counter(Component):
+struct Counter: #(Component):
     var count: Int
     var session: Session
     
