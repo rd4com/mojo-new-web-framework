@@ -14,7 +14,10 @@ feel free to fork, also to contribute fixes to bugs or suggestions.**
 &nbsp;
 
     ✨ mojoproject.toml:
-    🔮 nightly 2️⃣0️⃣2️⃣4️⃣🟪1️⃣0️⃣🟪2️⃣1️⃣0️⃣5️⃣
+    🔮 nightly 2️⃣0️⃣2️⃣4️⃣🟪1️⃣0️⃣🟪2️⃣4️⃣0️⃣6️⃣
+
+
+**MAX and Mojo usage and distribution are licensed under the MAX & Mojo Community License**
 
 &nbsp;
 
