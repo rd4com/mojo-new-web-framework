@@ -101,7 +101,7 @@ alias port=8080
 ```
 
 ## Next Todos 
-<!-- 1. `sessiondata` (`self.session[]`) -->
+<!-- 1. temporarely remove `->` from `Event` until it is needed -->
 - `Variant` for `ui.mojo` 
 
 
